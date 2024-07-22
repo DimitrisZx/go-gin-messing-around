@@ -1,26 +1,19 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"net/http"
+	"fmt"
+	"github.com/gofiber/fiber/v2"
+	"log"
+	"os"
 )
 
 func main() {
-	r := gin.Default()
-	r.LoadHTMLGlob("templates/*")
-	r.GET("/ping/:name", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "hello" + c.Param("name"),
-		})
-	})
-	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"greeting": "hello",
-		})
-	})
+	app := fiber.New()
+	port := os.Getenv("PORT")
 
-	err := r.Run()
-	if err != nil {
-		return
+	if port == "" {
+		port = "3000"
 	}
+
+	log.Fatalln(app.Listen(fmt.Sprintf(":%v", port)))
 }
